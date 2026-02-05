@@ -54,8 +54,8 @@
             height: var(--orbit-size);
             transform: translate(-50%, -50%);
             border-radius: 50%;
-            z-index: 20; /* DITINGKATKAN KE 20 AGAR DI DEPAN KARTU (container = 10) */
-            pointer-events: none; /* Agar klik tembus ke tombol */
+            z-index: 5;
+            pointer-events: none;
             animation: rotateOrbit 25s linear infinite;
         }
 
@@ -84,7 +84,7 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); /* Bayangan lebih tebal karena di depan */
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
             animation: walkCycle 0.6s ease-in-out infinite alternate;
         }
 
@@ -186,7 +186,7 @@
             padding: 2.5rem; border-radius: 25px;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
             text-align: center; max-width: 400px; width: 90%;
-            z-index: 10; /* Di belakang orbit (20) */
+            z-index: 10;
             position: relative; border: 1px solid rgba(255, 255, 255, 0.4);
             opacity: 0; transform: scale(0.8); transition: all 0.8s ease;
             display: flex; flex-direction: column; align-items: center;
@@ -250,7 +250,7 @@
 </head>
 <body>
 
-    <!-- SYSTEM ORBIT (Karakter Bergerak di Paling Depan) -->
+    <!-- SYSTEM ORBIT (Karakter Bergerak) -->
     <div class="orbit-system">
         <!-- Karakter 1: TUKANG SERVIS Generator -->
         <div class="char-wrapper pos-1">
