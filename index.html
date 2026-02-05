@@ -19,7 +19,8 @@
 
         body {
             font-family: 'Nunito', sans-serif;
-            background-image: url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1920&auto=format&fit=crop');
+            /* Menggunakan link gambar dari kode yang kamu berikan */
+            background-image: url('https://z-cdn-media.chatglm.cn/files/1afa7378-2e5c-4d03-8c61-98e3ec55d56b.png?auth_key=1870266451-452dfb1bf9cc40b69f7cd3435d3f8ff5-0-ccd214c1a2d9a57fe7e509a1d762cd23');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -120,16 +121,15 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* --- MUSIC CONTAINER (PERBAIKAN PENTING) --- */
+        /* --- MUSIC CONTAINER (PERBAIKAN) --- */
         #music-container {
-            /* Kita letakkan di pojok kiri atas tapi transparan */
-            position: fixed; 
-            top: 0;
-            left: 0;
+            position: fixed; /* Fixed agar tetap di layar */
+            top: 0; 
+            left: 0; 
             width: 1px;
             height: 1px;
-            opacity: 0; /* Transparan total */
-            pointer-events: none; /* Tidak bisa diklik user */
+            opacity: 0; /* Transparan total agar tidak terlihat */
+            pointer-events: none;
             z-index: -1; /* Di belakang semua elemen */
             overflow: hidden;
         }
@@ -244,8 +244,8 @@
             text-align: center;
             max-width: 90%;
             width: 90%;
-            max-height: 80vh; 
-            overflow-y: auto; 
+            max-height: 80vh;
+            overflow-y: auto;
             transform: scale(0.8);
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
@@ -306,7 +306,7 @@
         <span>🎵</span>
     </div>
 
-    <!-- 3. Music Container (Posisi diperbaiki) -->
+    <!-- 3. Music Container -->
     <div id="music-container"></div>
 
     <canvas id="confetti-canvas"></canvas>
@@ -330,11 +330,12 @@
         <div class="modal-content centered">
             <h2>Yay! 🎉</h2>
             <p style="text-align:center;">Thank you for saying yes!<br>I promise to make you happy forever.</p>
+            <!-- Tombol ini berubah fungsi jadi buka surat -->
             <button class="close-btn" onclick="showLetter()">Read My Letter</button>
         </div>
     </div>
 
-    <!-- 6. Letter Modal -->
+    <!-- 6. Letter Modal (Baru) -->
     <div class="modal" id="letterModal">
         <div class="modal-content">
             <h2>My Dearest ❤️</h2>
@@ -369,7 +370,7 @@
         });
 
         function playMusic() {
-            // TIDAK PERLU mengubah style iframe (top:-1000px) karena container sudah transparan
+            // PERBAIKAN: Menghapus style inline top:-1000px agar browser tidak mematikan musik
             const iframeHTML = `
                 <iframe 
                     width="100%" 
@@ -435,7 +436,10 @@
 
         // --- LOGIC LETTER (SURAT) ---
         function showLetter() {
+            // Sembunyikan modal sukses
             document.getElementById('successModal').classList.remove('active');
+            
+            // Tampilkan modal surat
             document.getElementById('letterModal').classList.add('active');
         }
 
