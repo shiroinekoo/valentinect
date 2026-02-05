@@ -301,8 +301,8 @@
             width: 100%; height: 100%;
             object-fit: cover;
             opacity: 0;
-            animation: zoomEffect 16s infinite;
-            border: none; /* Pastikan tidak ada border pada gambar */
+            animation: zoomEffect 16s infinite; /* 16s cycle */
+            border: none; 
         }
 
         /* Staggered animation delays */
@@ -361,6 +361,41 @@
         #typing-text.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* --- RESTART BUTTON (TRANSPARENT STYLE) --- */
+        #restart-btn {
+            position: absolute;
+            bottom: 50px;
+            z-index: 50;
+            padding: 15px 30px;
+            /* Background transparan */
+            background: rgba(255, 255, 255, 0.2);
+            /* Efek blur */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            /* Border tipis */
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            /* Font & Warna */
+            font-family: 'Nunito', sans-serif;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #fff; /* Teks Putih agar kontras */
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease, transform 0.3s ease, background 0.3s ease;
+        }
+        #restart-btn:hover {
+            transform: scale(1.1);
+            /* Sedikit lebih terang saat di-hover */
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+        #restart-btn.visible {
+            opacity: 1;
         }
 
         .cursor {
@@ -492,12 +527,19 @@
         <img id="end-couple-photo" src="https://z-cdn-media.chatglm.cn/files/02b72866-f915-4397-81fd-18f2fbf66708.png?auth_key=1870285837-8b62c65cd5214f04b5464f274a32791a-0-47ca9399fe118da4b400a7869c854afb" alt="Couple">
         
         <div id="typing-text"></div>
+
+        <!-- Transparent Back Button -->
+        <button id="restart-btn" onclick="resetPage()">Back</button>
     </div>
 
     <script>
         // --- GLOBAL VARIABLES ---
         const videoId = 'CgjknaWVChY'; 
         let isMusicPlaying = false;
+        
+        // Move these to global scope so resetPage() can access them
+        let clickCount = 0;
+        let currentScale = 1;
 
         // --- AUTO START LOGIC ---
         window.addEventListener('DOMContentLoaded', () => {
@@ -545,8 +587,6 @@
         const yesBtn = document.getElementById('yesBtn');
         const modal = document.getElementById('successModal');
         const mainContent = document.getElementById('mainContent');
-        let clickCount = 0;
-        let currentScale = 1;
 
         noBtn.addEventListener('mouseover', () => { noBtn.style.transform = `translateX(${Math.random() * 10 - 5}px)`; });
 
@@ -568,11 +608,10 @@
             startConfetti();
             document.getElementById('orbitSystem').classList.add('behind-modal');
             
-            // --- FIX: Sembunyikan kotak utama (Main Container) agar border-nya tidak muncul ---
-            mainContent.classList.remove('show'); // Hilangkan animasi bounce masuk
-            mainContent.classList.add('fade-out'); // Tambahkan animasi keluar (fade out)
+            // --- FIX: Sembunyikan kotak utama ---
+            mainContent.classList.remove('show'); 
+            mainContent.classList.add('fade-out'); 
             
-            // Setelah animasi fade out selesai (0.5s), hilangkan elemen dari layout
             setTimeout(() => {
                 mainContent.style.display = 'none';
             }, 500);
@@ -597,7 +636,7 @@
             // 2. Sembunyikan orbit
             document.getElementById('orbitSystem').style.opacity = '0';
 
-            // 3. Pastikan container utama benar-benar hilang (double check)
+            // 3. Pastikan container utama benar-benar hilang
             if (mainContent.style.display !== 'none') {
                 mainContent.style.display = 'none';
             }
@@ -616,6 +655,24 @@
             setTimeout(() => {
                 playStorySequence();
             }, 1500);
+
+            // --- LOGIC TOMBOL KEMBALI ---
+            // Durasi total slideshow adalah 16 detik (4 gambar x 4s delay)
+            const totalCycleTime = 16000; 
+
+            // Reset tombol
+            const restartBtn = document.getElementById('restart-btn');
+            restartBtn.classList.remove('visible');
+            restartBtn.style.display = 'none';
+
+            // Tampilkan tombol setelah siklus selesai
+            setTimeout(() => {
+                restartBtn.style.display = 'block';
+                // Delay kecil agar transisi opacity berjalan
+                setTimeout(() => {
+                    restartBtn.classList.add('visible');
+                }, 100);
+            }, totalCycleTime);
         }
 
         function playStorySequence() {
@@ -644,6 +701,58 @@
                 element.innerHTML = text.replace(/\n/g, '<br>'); 
                 if (callback) callback();
             }
+        }
+
+        // --- RESET / BACK FUNCTION (MUSIC CONTINUES) ---
+        function resetPage() {
+            // 1. Hide Cinematic Ending
+            const endScreen = document.getElementById('cinematic-end');
+            endScreen.classList.remove('active');
+            
+            // Tunggu transisi fade out selesai baru sembunyikan display
+            setTimeout(() => {
+                endScreen.style.display = 'none';
+            }, 1500);
+
+            // 2. Restore Body Background
+            document.body.classList.remove('cinematic-mode');
+
+            // 3. Reset Main Card
+            // Hapus kelas fade-out agar animasi bisa berjalan ulang
+            mainContent.classList.remove('fade-out');
+            mainContent.style.display = 'flex';
+            
+            // Trik reflow agar transisi CSS ulang
+            void mainContent.offsetWidth; 
+            
+            mainContent.classList.add('show');
+
+            // 4. Reset Button State
+            yesBtn.innerText = "Yes";
+            yesBtn.style.transform = "scale(1)";
+            clickCount = 0;
+            currentScale = 1;
+
+            // 5. Reset Orbit
+            const orbit = document.getElementById('orbitSystem');
+            orbit.classList.remove('behind-modal');
+            orbit.style.opacity = '1';
+
+            // 6. Hide Modals
+            document.getElementById('successModal').classList.remove('active');
+            document.getElementById('letterModal').classList.remove('active');
+
+            // 7. Hide Back Button
+            const restartBtn = document.getElementById('restart-btn');
+            restartBtn.classList.remove('visible');
+            restartBtn.style.display = 'none';
+
+            // 8. Clear Typing Text
+            const typingText = document.getElementById('typing-text');
+            typingText.classList.remove('visible');
+            typingText.innerHTML = '';
+
+            // MUSIC CONTINUES AUTOMATICALLY BECAUSE WE DIDN'T RELOAD THE PAGE
         }
 
         // --- LOGIC CONFETTI ---
