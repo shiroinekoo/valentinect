@@ -45,7 +45,7 @@
             z-index: 1;
         }
 
-        /* --- ANIMASI ORBIT (Mengelilingi Website) --- */
+        /* --- ANIMASI ORBIT --- */
         .orbit-system {
             position: fixed;
             top: 50%;
@@ -54,12 +54,16 @@
             height: var(--orbit-size);
             transform: translate(-50%, -50%);
             border-radius: 50%;
-            z-index: 5;
+            z-index: 20;
             pointer-events: none;
+            transition: z-index 0.5s ease;
             animation: rotateOrbit 25s linear infinite;
         }
 
-        /* Posisi Karakter di Orbit */
+        .orbit-system.behind-modal {
+            z-index: -1;
+        }
+
         .char-wrapper {
             position: absolute;
             top: 50%;
@@ -69,22 +73,14 @@
             animation: counterRotate 25s linear infinite;
         }
 
-        /* Posisi 1: Kanan */
-        .pos-1 {
-            transform: translate(calc(var(--orbit-size) / 2), -50%); 
-        }
+        .pos-1 { transform: translate(calc(var(--orbit-size) / 2), -50%); }
+        .pos-2 { transform: translate(calc(-1 * var(--orbit-size) / 2), -50%); }
 
-        /* Posisi 2: Kiri */
-        .pos-2 {
-            transform: translate(calc(-1 * var(--orbit-size) / 2), -50%);
-        }
-
-        /* Gambar Karakter */
         .orbit-char {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
             animation: walkCycle 0.6s ease-in-out infinite alternate;
         }
 
@@ -213,27 +209,65 @@
         .btn-no { background-color: rgba(255, 255, 255, 0.3); color: #e0e0e0; cursor: not-allowed !important; pointer-events: none; opacity: 0.5; position: relative; }
         .btn-no::after { content: "❌"; position: absolute; font-size: 1.2rem; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
-        /* --- MODAL --- */
+        /* --- MODAL UMUM --- */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(27, 67, 50, 0.6); backdrop-filter: blur(5px);
             display: flex; justify-content: center; align-items: center;
             z-index: 100; opacity: 0; visibility: hidden;
             transition: opacity 0.5s ease, visibility 0.5s;
+            padding: 20px; /* Tambahkan padding untuk modal biar tidak menempel pinggir HP */
         }
         .modal.active { opacity: 1; visibility: visible; }
+        
         .modal-content {
             background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5); padding: 3rem; border-radius: 20px;
-            text-align: center; max-width: 90%; width: 90%; max-height: 80vh; overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+            padding: 3rem; border-radius: 20px;
+            text-align: center; max-width: 90%; width: 90%;
             transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
         }
         .modal.active .modal-content { transform: scale(1); }
+
         .modal h2 { font-family: 'Pacifico', cursive; color: var(--white); font-size: 2.5rem; margin-bottom: 1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         .modal p { font-size: 1.1rem; color: var(--white); margin-bottom: 2rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5); line-height: 1.8; text-align: left; }
         .modal-content.centered p { text-align: center; }
         .close-btn { background: var(--secondary-color); color: white; border: none; padding: 12px 35px; border-radius: 30px; font-size: 1.1rem; cursor: pointer; font-weight: bold; margin-top: 1rem; }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99; }
+
+        /* --- OPTIMISASI MODAL SURAT (NO SCROLL) --- */
+        #letterModal .modal-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Tengah vertikal */
+            max-height: 95vh; /* Paksa hampir penuh tinggi layar */
+            overflow: hidden; /* Hilangkan scrollbar */
+        }
+        
+        #letterModal h2 { margin-bottom: 0.8rem; font-size: 2rem; }
+        #letterModal p { margin-bottom: 0.8rem; font-size: 1rem; line-height: 1.5; text-align: justify; }
+        #letterModal .close-btn { margin-top: auto; } /* Tombol push ke bawah jika ada sisa ruang */
+
+        /* Media Query Khusus HP (Tinggi layar terbatas) */
+        @media (max-width: 600px) {
+            #letterModal .modal-content {
+                padding: 1.5rem 1rem; /* Kurangi padding */
+            }
+            #letterModal h2 {
+                font-size: 1.6rem; /* Font judul lebih kecil */
+                margin-bottom: 0.5rem;
+            }
+            #letterModal p {
+                font-size: 0.9rem; /* Font isi lebih kecil */
+                margin-bottom: 0.5rem;
+                line-height: 1.4; /* Jarak antar baris lebih rapat */
+                text-align: justify;
+            }
+            #letterModal .close-btn {
+                padding: 10px 25px; /* Tombol lebih kecil */
+                font-size: 0.9rem;
+            }
+        }
 
         @media (max-width: 768px) {
             :root { --orbit-size: 350px; }
@@ -250,8 +284,8 @@
 </head>
 <body>
 
-    <!-- SYSTEM ORBIT (Karakter Bergerak) -->
-    <div class="orbit-system">
+    <!-- SYSTEM ORBIT -->
+    <div class="orbit-system" id="orbitSystem">
         <!-- Karakter 1: TUKANG SERVIS Generator -->
         <div class="char-wrapper pos-1">
             <img src="https://z-cdn-media.chatglm.cn/files/e2825cbd-7fce-4166-ad20-ecbc20668f8d.png?auth_key=1870286810-288a316b123349cebef184bdc228e2d4-0-65ecf59c48c02486cee0bf202c422043" 
@@ -284,7 +318,6 @@
 
     <!-- 4. Main Content -->
     <div class="container" id="mainContent">
-        <!-- Icon Image Display -->
         <img src="https://z-cdn-media.chatglm.cn/files/02b72866-f915-4397-81fd-18f2fbf66708.png?auth_key=1870285837-8b62c65cd5214f04b5464f274a32791a-0-47ca9399fe118da4b400a7869c854afb" 
              alt="3D Couple Icon" 
              class="couple-icon">
@@ -398,12 +431,14 @@
         function showSuccess() {
             modal.classList.add('active');
             startConfetti();
+            document.getElementById('orbitSystem').classList.add('behind-modal');
         }
 
         // --- LOGIC LETTER (SURAT) ---
         function showLetter() {
             document.getElementById('successModal').classList.remove('active');
             document.getElementById('letterModal').classList.add('active');
+            document.getElementById('orbitSystem').classList.add('behind-modal');
         }
 
         // --- LOGIC CONFETTI ---
