@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For My Special Valentine ❤️</title>
     
-    <!-- Favicon: "Me and U.png" -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://z-cdn-media.chatglm.cn/files/02b72866-f915-4397-81fd-18f2fbf66708.png?auth_key=1870285837-8b62c65cd5214f04b5464f274a32791a-0-47ca9399fe118da4b400a7869c854afb">
     <link rel="apple-touch-icon" href="https://z-cdn-media.chatglm.cn/files/02b72866-f915-4397-81fd-18f2fbf66708.png?auth_key=1870285837-8b62c65cd5214f04b5464f274a32791a-0-47ca9399fe118da4b400a7869c854afb">
 
@@ -94,9 +94,7 @@
             100% { transform: translate(350px, -50%) rotate(-360deg); }
         }
 
-        .pos-2 {
-            animation: counterRotateReverse 25s linear infinite;
-        }
+        .pos-2 { animation: counterRotateReverse 25s linear infinite; }
         @keyframes counterRotateReverse {
             0% { transform: translate(-350px, -50%) rotate(0deg); }
             100% { transform: translate(-350px, -50%) rotate(-360deg); }
@@ -204,7 +202,7 @@
 
         .buttons { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 2rem; min-height: 60px; }
         
-        /* Style tombol Yes (Referensi) */
+        /* Style tombol Yes */
         .btn { padding: 12px 25px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; font-family: 'Nunito', sans-serif; }
         .btn-yes { background-color: var(--secondary-color); color: white; box-shadow: 0 4px 15px rgba(45, 106, 79, 0.4); transform: scale(1); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2; }
         .btn-yes:hover { background-color: var(--primary-color); }
@@ -236,32 +234,30 @@
         .modal p { font-size: 1.1rem; color: var(--white); margin-bottom: 2rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5); line-height: 1.8; text-align: left; }
         .modal-content.centered p { text-align: center; }
 
-        /* --- PERUBAHAN STYLE TOMBOL CLOSE (DISINI) --- */
+        /* --- STYLE TOMBOL CLOSE --- */
         .close-btn {
             background: var(--secondary-color); 
             color: white; 
             border: none; 
-            padding: 12px 25px; /* Sama dengan .btn-yes */
-            border-radius: 50px; /* Sama dengan .btn-yes (sebelumnya 30px) */
+            padding: 12px 25px; 
+            border-radius: 50px; 
             font-size: 1.1rem; 
             cursor: pointer; 
             font-weight: bold; 
-            font-family: 'Nunito', sans-serif; /* Pastikan font sama */
+            font-family: 'Nunito', sans-serif; 
             margin-top: 1rem;
-            box-shadow: 0 4px 15px rgba(45, 106, 79, 0.4); /* Tambahkan bayangan seperti .btn-yes */
-            transition: all 0.3s ease; /* Tambahkan transisi halus */
+            box-shadow: 0 4px 15px rgba(45, 106, 79, 0.4); 
+            transition: all 0.3s ease; 
         }
-
-        /* Efek Hover tombol Close agar mirip Yes */
         .close-btn:hover {
             background-color: var(--primary-color);
-            transform: scale(1.05); /* Efek membesar sedikit */
-            box-shadow: 0 6px 20px rgba(45, 106, 79, 0.6); /* Bayangan lebih dalam */
+            transform: scale(1.05); 
+            box-shadow: 0 6px 20px rgba(45, 106, 79, 0.6); 
         }
 
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99; }
 
-        /* --- OPTIMISASI MODAL SURAT (NO SCROLL) --- */
+        /* --- OPTIMISASI MODAL SURAT --- */
         #letterModal .modal-content {
             display: flex;
             flex-direction: column;
@@ -274,25 +270,100 @@
         #letterModal p { margin-bottom: 0.8rem; font-size: 1rem; line-height: 1.5; text-align: justify; }
         #letterModal .close-btn { margin-top: auto; } 
 
-        /* Media Query Khusus HP */
+        /* --- CINEMATIC ENDING STYLE --- */
+        #cinematic-end {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: black;
+            z-index: 20000; 
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #cinematic-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('https://z-cdn-media.chatglm.cn/files/fb2928af-1884-4eba-975c-0ca272592bb0.png?auth_key=1870296927-21bc3545002e44e0b5178953d6aec1b4-0-da5cdac4f993f7ce8657f1ae520a03c4');
+            background-size: cover;
+            background-position: center center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        #cinematic-bg.zooming {
+            animation: slowZoom 10s infinite alternate ease-in-out;
+        }
+
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        #typing-text {
+            position: relative;
+            z-index: 2;
+            /* Font Normal Nunito */
+            font-family: 'Nunito', sans-serif; 
+            font-weight: 700; 
+            color: #fff;
+            font-size: 2.2rem;
+            /* DIUBAH: Puisi rata kiri */
+            text-align: left; 
+            text-shadow: 0 4px 15px rgba(0,0,0,0.7);
+            min-height: 80px; 
+            opacity: 0;
+            transition: opacity 1s ease;
+            padding: 0 20px;
+            white-space: pre-wrap; 
+            line-height: 1.6;
+            max-width: 800px;
+        }
+
+        /* Khusus untuk teks terakhir "I'm crazy about you" */
+        #typing-text.big-text {
+            font-family: 'Pacifico', cursive; /* Kembali ke font Fancy */
+            font-size: 3.5rem; /* Lebih besar lagi */
+            line-height: 1.2;
+            /* DIUBAH: Teks akhir rata tengah kembali */
+            text-align: center; 
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background-color: white;
+            margin-left: 2px;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Media Query HP */
         @media (max-width: 600px) {
-            #letterModal .modal-content {
-                padding: 1.5rem 1rem; 
+            #letterModal .modal-content { padding: 1.5rem 1rem; }
+            #letterModal h2 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+            #letterModal p { font-size: 0.9rem; margin-bottom: 0.5rem; line-height: 1.4; text-align: justify; }
+            #letterModal .close-btn { padding: 10px 30px; font-size: 0.9rem; }
+            
+            /* Font Puisi di HP */
+            #typing-text { 
+                font-size: 1.2rem; 
+                line-height: 1.6;
+                /* Tetap rata kiri di HP */
+                text-align: left; 
+                padding: 0 15px; /* Sedikit padding samping */
             }
-            #letterModal h2 {
-                font-size: 1.6rem; 
-                margin-bottom: 0.5rem;
-            }
-            #letterModal p {
-                font-size: 0.9rem; 
-                margin-bottom: 0.5rem;
-                line-height: 1.4; 
-                text-align: justify;
-            }
-            /* Pastikan di HP tombol close tetap proporsional tapi tetap ada bayangannya */
-            #letterModal .close-btn {
-                padding: 10px 30px; /* Padding sedikit lebih kecil di HP */
-                font-size: 0.9rem;
+            /* Font Akhir di HP */
+            #typing-text.big-text {
+                font-size: 2.2rem;
+                text-align: center; /* Tetap rata tengah */
             }
         }
 
@@ -313,16 +384,16 @@
 
     <!-- SYSTEM ORBIT -->
     <div class="orbit-system" id="orbitSystem">
-        <!-- Karakter 1: TUKANG SERVIS Generator -->
+        <!-- Karakter 1 -->
         <div class="char-wrapper pos-1">
             <img src="https://z-cdn-media.chatglm.cn/files/e2825cbd-7fce-4166-ad20-ecbc20668f8d.png?auth_key=1870286810-288a316b123349cebef184bdc228e2d4-0-65ecf59c48c02486cee0bf202c422043" 
-                 class="orbit-char" alt="Tukang Servis">
+                 class="orbit-char" alt="Char 1">
         </div>
         
-        <!-- Karakter 2: NERO LEGION -->
+        <!-- Karakter 2 -->
         <div class="char-wrapper pos-2">
             <img src="https://z-cdn-media.chatglm.cn/files/a8fb6bc2-07cb-4620-977a-166dae7db20e.png?auth_key=1870286810-9b381b56881e4200b4c154826a14b96d-0-773d44cd53c98270b37115eb9c92f2e3" 
-                 class="orbit-char" alt="Nero Legion">
+                 class="orbit-char" alt="Char 2">
         </div>
     </div>
 
@@ -366,7 +437,6 @@
         <div class="modal-content centered">
             <h2>Yay! 🎉</h2>
             <p style="text-align:center;">Thank you for saying yes!<br>I promise to make you happy forever.</p>
-            <!-- Tombol ini juga menggunakan class .close-btn, jadi otomatis ikut berubah -->
             <button class="close-btn" onclick="showLetter()">Read My Letter</button>
         </div>
     </div>
@@ -376,7 +446,7 @@
         <div class="modal-content">
             <h2>My Tea ❤️</h2>
             <p>
-                Since the day you walked into my life, everything has become more beautiful. 
+                Since day you walked into my life, everything has become more beautiful. 
                 Your voice lights up my darkest days, and your love gives me a happiness I never knew existed. <br><br>
                 Every moment we share is a treasure I hold close to my heart. 
                 You are not just my partner; you are my best friend, my soulmate, and my forever love. <br><br>
@@ -384,13 +454,19 @@
                 Forever Yours,<br>
                 Bell.
             </p>
-            <button class="close-btn" onclick="location.reload()">Close</button>
+            <button class="close-btn" onclick="showCinematicEnd()">Close</button>
         </div>
+    </div>
+
+    <!-- 7. Cinematic Ending Screen -->
+    <div id="cinematic-end">
+        <div id="cinematic-bg"></div>
+        <div id="typing-text"></div>
     </div>
 
     <script>
         // --- GLOBAL VARIABLES ---
-        const videoId = 'iPxrMqQf1SI'; 
+        const videoId = 'CgjknaWVChY'; 
         let isMusicPlaying = false;
 
         // --- LOGIC START & MUSIC ---
@@ -467,6 +543,92 @@
             document.getElementById('successModal').classList.remove('active');
             document.getElementById('letterModal').classList.add('active');
             document.getElementById('orbitSystem').classList.add('behind-modal');
+        }
+
+        // --- LOGIC CINEMATIC ENDING (UPDATED) ---
+        function showCinematicEnd() {
+            document.getElementById('letterModal').classList.remove('active');
+            
+            const endScreen = document.getElementById('cinematic-end');
+            endScreen.style.display = 'flex';
+            
+            const bg = document.getElementById('cinematic-bg');
+            
+            setTimeout(() => {
+                bg.style.opacity = '1';
+                bg.classList.add('zooming');
+            }, 50);
+
+            setTimeout(() => {
+                playStorySequence();
+            }, 1000);
+        }
+
+        function playStorySequence() {
+            const textElement = document.getElementById('typing-text');
+            
+            const longText = `Kini tubuh mungilmu sudah membesar
+Rambut panjangmu sudah tak terkuncir
+Baju putihmu kini telah menghitam
+Dengan pinggang yang terlihat
+Bibir mungilmu kini sudah hilang
+Langkah kecilmu perlahan melebar
+Entah bagaimana, aku merasa melihat orang berbeda
+
+“Eee....” lalu “Darimana aja, baru kelihatan”
+Perlahan mendekat hingga mata kita saling bertatap
+
+Wajah polosmu kini tertata rapi
+Celana pendekmu berganti menjadi rok panjang
+Tawa kencangmu kini lebih tertib
+Tapi senyummu tetap membuatku tak berdaya
+
+Dulu, kita bercanda di halaman sekolah
+Kini, kita berbincang tentang masa depan
+Aku melihat perempuan yang anggun di depanku
+Teringat gadis kecil yang selalu mengejarku
+
+Di balik perubahan itu, ada satu hal yang sama
+Mata itu... masih membuat jantungku berdegup kencang
+Seperti waktu itu, seperti waktu ini`;
+
+            const finalText = "I'm crazy about you";
+
+            textElement.classList.remove('big-text'); 
+            textElement.style.opacity = '1';
+            
+            typeWriter(longText, textElement, 0, () => {
+                setTimeout(() => {
+                    textElement.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        textElement.innerHTML = '';
+                        
+                        textElement.classList.add('big-text');
+                        textElement.style.opacity = '1';
+                        
+                        typeWriter(finalText, textElement, 0, () => {
+                            // Selesai
+                        });
+                    }, 1000); 
+                    
+                }, 7000); 
+            });
+        }
+
+        function typeWriter(text, element, i, callback) {
+            if (i < text.length) {
+                let char = text.charAt(i);
+                let htmlContent = text.substring(0, i+1).replace(/\n/g, '<br>');
+                
+                element.innerHTML = htmlContent + '<span class="cursor"></span>';
+                
+                i++;
+                setTimeout(() => typeWriter(text, element, i, callback), 50); 
+            } else {
+                element.innerHTML = text.replace(/\n/g, '<br>'); 
+                if (callback) callback();
+            }
         }
 
         // --- LOGIC CONFETTI ---
