@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For My Special Valentine ❤️</title>
     
-    <!-- Favicon: This makes the image the icon in the browser tab -->
-    <link rel="icon" type="image/png" href="https://z-cdn-media.chatglm.cn/files/67ce3b25-d0e1-4ff3-91c8-ceb916555fef.png?auth_key=1870284536-021fc657b3dc4bb9a3cf0cfba11725a4-0-257470007c238e59fef3f349a9ce28e1f">
-    <link rel="apple-touch-icon" href="https://z-cdn-media.chatglm.cn/files/67ce3b25-d0e1-4ff3-91c8-ceb916555fef.png?auth_key=1870284536-021fc657b3dc4bb9a3cf0cfba11725a4-0-257470007c238e59fef3f349a9ce28e1f">
+    <!-- Favicon: Menggunakan gambar kedua (Rambut Perak & Hitam) -->
+    <link rel="icon" type="image/png" href="https://z-cdn-media.chatglm.cn/files/cb04dc51-0314-403a-98a9-96c436122c49.png?auth_key=1870285289-9bce59189da24d578abfd174bd90e110-0-7902c90ba7858b3f9bca0c6d2f510448">
+    <link rel="apple-touch-icon" href="https://z-cdn-media.chatglm.cn/files/cb04dc51-0314-403a-98a9-96c436122c49.png?auth_key=1870285289-9bce59189da24d578abfd174bd90e110-0-7902c90ba7858b3f9bca0c6d2f510448">
 
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     
@@ -128,10 +128,8 @@
         /* --- MUSIC CONTAINER (TEKNIK OFF-SCREEN BESAR) --- */
         #music-container {
             position: fixed;
-            /* Posisikan jauh di luar layar (kiri atas) */
             top: -9999px;
             left: -9999px;
-            /* Beri ukuran yang cukup besar agar browser tidak menganggapnya sampah */
             width: 300px;
             height: 200px;
             opacity: 1; 
@@ -170,8 +168,8 @@
         .couple-icon {
             width: 140px;
             height: 140px;
-            object-fit: cover; /* Ensures the image covers the area nicely */
-            border-radius: 50%; /* Makes it circular */
+            object-fit: cover; 
+            border-radius: 50%; 
             border: 5px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             margin-bottom: 1.5rem;
@@ -338,8 +336,8 @@
 
     <!-- 4. Main Content -->
     <div class="container" id="mainContent">
-        <!-- Icon Image Display (Visible in the card) -->
-        <img src="https://z-cdn-media.chatglm.cn/files/67ce3b25-d0e1-4ff3-91c8-ceb916555fef.png?auth_key=1870284536-021fc657b3dc4bb9a3cf0cfba11725a4-0-257470007c238e59fef3f349a9ce28e1f" 
+        <!-- Icon Image Display (Changed to second image) -->
+        <img src="https://z-cdn-media.chatglm.cn/files/cb04dc51-0314-403a-98a9-96c436122c49.png?auth_key=1870285289-9bce59189da24d578abfd174bd90e110-0-7902c90ba7858b3f9bca0c6d2f510448" 
              alt="3D Couple Icon" 
              class="couple-icon">
 
@@ -401,8 +399,6 @@
         });
 
         function playMusic() {
-            // PERBAIKAN: Iframe dibuat dengan ukuran penuh container (300x200)
-            // tapi container berada di luar layar (top: -9999px)
             const iframeHTML = `
                 <iframe 
                     width="100%" 
@@ -468,10 +464,7 @@
 
         // --- LOGIC LETTER (SURAT) ---
         function showLetter() {
-            // Sembunyikan modal sukses
             document.getElementById('successModal').classList.remove('active');
-            
-            // Tampilkan modal surat
             document.getElementById('letterModal').classList.add('active');
         }
 
