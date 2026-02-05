@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For My Special Valentine ❤️</title>
+    
+    <!-- Favicon: This makes the image the icon in the browser tab -->
+    <link rel="icon" type="image/png" href="https://z-cdn-media.chatglm.cn/files/67ce3b25-d0e1-4ff3-91c8-ceb916555fef.png?auth_key=1870284536-021fc657b3dc4bb9a3cf0cfba11725a4-0-257470007c238e59fef3f349a9ce28e1f">
+    <link rel="apple-touch-icon" href="https://z-cdn-media.chatglm.cn/files/67ce3b25-d0e1-4ff3-91c8-ceb916555fef.png?auth_key=1870284536-021fc657b3dc4bb9a3cf0cfba11725a4-0-257470007c238e59fef3f349a9ce28e1f">
+
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -151,11 +156,31 @@
             opacity: 0;
             transform: scale(0.8);
             transition: all 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .container.show {
             opacity: 1;
             transform: scale(1);
+        }
+
+        /* Styles for the Icon/Image in the card */
+        .couple-icon {
+            width: 140px;
+            height: 140px;
+            object-fit: cover; /* Ensures the image covers the area nicely */
+            border-radius: 50%; /* Makes it circular */
+            border: 5px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1.5rem;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .container h1 {
@@ -313,6 +338,11 @@
 
     <!-- 4. Main Content -->
     <div class="container" id="mainContent">
+        <!-- Icon Image Display (Visible in the card) -->
+        <img src="https://z-cdn-media.chatglm.cn/files/67ce3b25-d0e1-4ff3-91c8-ceb916555fef.png?auth_key=1870284536-021fc657b3dc4bb9a3cf0cfba11725a4-0-257470007c238e59fef3f349a9ce28e1f" 
+             alt="3D Couple Icon" 
+             class="couple-icon">
+
         <h1>My Love ❤️</h1>
         <p>
             In this beautiful place, I have one important question for you...<br>
@@ -346,7 +376,7 @@
                 You are not just my partner; you are my best friend, my soulmate, and my forever love. <br><br>
                 I promise to cherish you, to make you laugh, and to love you with all my heart, not just on Valentine's Day, but every single day. <br><br>
                 Forever Yours,<br>
-                Bell.
+                Me.
             </p>
             <button class="close-btn" onclick="location.reload()">Close</button>
         </div>
@@ -496,7 +526,7 @@
                 confetto.position.y += confetto.velocity.y;
                 if (confetto.position.y >= canvas.height) confetti.splice(index, 1);
                 if (confetto.position.x > canvas.width) confetto.position.x = 0;
-                if (confetto.position.x < 0) confetti.position.x = canvas.width;
+                if (confetto.position.x < 0) confetto.position.x = canvas.width;
                 confetto.scale.y = Math.cos(confetto.position.y * 0.1);
                 ctx.fillStyle = confetto.scale.y > 0 ? confetto.color.front : confetto.color.back;
                 ctx.fillRect(-width / 2, -height / 2, width, height);
