@@ -19,7 +19,7 @@
 
         body {
             font-family: 'Nunito', sans-serif;
-            background-image: url('https://z-cdn-media.chatglm.cn/files/1afa7378-2e5c-4d03-8c61-98e3ec55d56b.png?auth_key=1870266451-452dfb1bf9cc40b69f7cd3435d3f8ff5-0-ccd214c1a2d9a57fe7e509a1d762cd23');
+            background-image: url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1920&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -120,15 +120,18 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* --- MUSIC CONTAINER --- */
+        /* --- MUSIC CONTAINER (PERBAIKAN PENTING) --- */
         #music-container {
-            position: absolute;
-            top: -1000px; 
-            left: -1000px;
+            /* Kita letakkan di pojok kiri atas tapi transparan */
+            position: fixed; 
+            top: 0;
+            left: 0;
             width: 1px;
             height: 1px;
-            opacity: 0;
-            pointer-events: none;
+            opacity: 0; /* Transparan total */
+            pointer-events: none; /* Tidak bisa diklik user */
+            z-index: -1; /* Di belakang semua elemen */
+            overflow: hidden;
         }
 
         /* --- MAIN CARD --- */
@@ -241,8 +244,8 @@
             text-align: center;
             max-width: 90%;
             width: 90%;
-            max-height: 80vh; /* Mencegah melebihi layar */
-            overflow-y: auto; /* Scroll jika surat panjang */
+            max-height: 80vh; 
+            overflow-y: auto; 
             transform: scale(0.8);
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
@@ -263,11 +266,11 @@
             margin-bottom: 2rem;
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
             line-height: 1.8;
-            text-align: left; /* Surat rata kiri */
+            text-align: left; 
         }
 
         .modal-content.centered p {
-            text-align: center; /* Pusatkan teks pada modal success */
+            text-align: center; 
         }
 
         .close-btn {
@@ -303,7 +306,7 @@
         <span>🎵</span>
     </div>
 
-    <!-- 3. Music Container -->
+    <!-- 3. Music Container (Posisi diperbaiki) -->
     <div id="music-container"></div>
 
     <canvas id="confetti-canvas"></canvas>
@@ -327,12 +330,11 @@
         <div class="modal-content centered">
             <h2>Yay! 🎉</h2>
             <p style="text-align:center;">Thank you for saying yes!<br>I promise to make you happy forever.</p>
-            <!-- Tombol ini berubah fungsi jadi buka surat -->
             <button class="close-btn" onclick="showLetter()">Read My Letter</button>
         </div>
     </div>
 
-    <!-- 6. Letter Modal (Baru) -->
+    <!-- 6. Letter Modal -->
     <div class="modal" id="letterModal">
         <div class="modal-content">
             <h2>My Dearest ❤️</h2>
@@ -343,7 +345,7 @@
                 You are not just my partner; you are my best friend, my soulmate, and my forever love. <br><br>
                 I promise to cherish you, to make you laugh, and to love you with all my heart, not just on Valentine's Day, but every single day. <br><br>
                 Forever Yours,<br>
-                Bell.
+                Me.
             </p>
             <button class="close-btn" onclick="location.reload()">Close</button>
         </div>
@@ -367,12 +369,11 @@
         });
 
         function playMusic() {
-            // Loop logic: loop=1 & playlist=[same ID] ensures infinite loop
+            // TIDAK PERLU mengubah style iframe (top:-1000px) karena container sudah transparan
             const iframeHTML = `
                 <iframe 
-                    style="position: absolute; top: -1000px; left: -1000px;"
-                    width="1" 
-                    height="1" 
+                    width="100%" 
+                    height="100%" 
                     src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=0&playsinline=1" 
                     title="YouTube video player" 
                     frameborder="0" 
@@ -434,10 +435,7 @@
 
         // --- LOGIC LETTER (SURAT) ---
         function showLetter() {
-            // Sembunyikan modal sukses
             document.getElementById('successModal').classList.remove('active');
-            
-            // Tampilkan modal surat
             document.getElementById('letterModal').classList.add('active');
         }
 
