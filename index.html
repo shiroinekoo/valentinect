@@ -36,7 +36,7 @@
             overflow: hidden;
             position: relative;
             transition: background-color 1s ease;
-            user-select: none; /* Mencegah seleksi teks saat bermain dengan tombol */
+            user-select: none;
         }
 
         /* Class ini akan aktif saat Cinematic Ending muncul */
@@ -197,7 +197,7 @@
             gap: 20px; 
             margin-top: 2rem; 
             min-height: 60px; 
-            position: relative; /* Penting agar tombol No bisa absolute relatif terhadap container, lalu fixed saat kabur */
+            position: relative; 
             width: 100%;
         }
         
@@ -213,14 +213,13 @@
         }
         .btn-yes:hover { background-color: var(--primary-color); transform: scale(1.1); }
         
-        /* UPDATED STYLE NO BUTTON */
+        /* STYLE NO BUTTON */
         .btn-no { 
             background-color: rgba(255, 255, 255, 0.3); 
             color: #fff; 
-            position: relative; /* Mulai relative */
+            position: relative; 
             z-index: 2;
-            /* Transisi smooth agar terlihat seperti 'meluncur' bukan teleport */
-            transition: top 0.3s ease, left 0.3s ease, transform 0.2s; 
+            transition: top 0.2s ease, left 0.2s ease, transform 0.2s; 
         }
         .btn-no:hover { background-color: rgba(255, 255, 255, 0.5); }
 
@@ -599,51 +598,58 @@
             if (isMusicPlaying) { pauseMusic(); } else { playMusic(); }
         }
 
-        // --- LOGIC BUTTONS (UPDATED) ---
+        // --- LOGIC BUTTONS ---
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
         const modal = document.getElementById('successModal');
         const mainContent = document.getElementById('mainContent');
 
-        // LOGIC TOMBOL NO (RUNAWAY BUTTON)
+        // LOGIC TOMBOL NO (RUNAWAY BUTTON - DI DALAM KARTU)
         function moveButton() {
-            // 1. Hitung dimensi layar dan tombol
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
+            // 1. Ambil batas area kartu putih (container)
+            const containerRect = mainContent.getBoundingClientRect();
+            
+            // Ukuran tombol
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
 
-            // 2. Tentukan batas agar tombol tidak keluar layar
-            // Kita beri padding sedikit agar tidak terpotong di tepi
-            const padding = 20;
-            const maxWidth = viewportWidth - btnWidth - padding;
-            const maxHeight = viewportHeight - btnHeight - padding;
+            // Padding agar tombol tidak nempel tepi
+            const padding = 15;
 
-            // 3. Buat posisi acak
-            const randomX = Math.max(padding, Math.random() * maxWidth);
-            const randomY = Math.max(padding, Math.random() * maxHeight);
+            // Batas koordinat X (horizontal) di dalam kartu
+            const minX = containerRect.left + padding;
+            const maxX = containerRect.right - btnWidth - padding;
 
-            // 4. Ubah posisi tombol
-            // Kita ubah ke position: fixed agar bisa lepas dari container
+            // Batas koordinat Y (vertikal) di dalam kartu
+            // Kita tambahkan +200px agar tidak naik ke atas foto/judul
+            // Hanya bergerak di area bawah (teks & tombol)
+            const minY = containerRect.top + 200; 
+            const maxY = containerRect.bottom - btnHeight - padding;
+
+            // Hitung posisi acak baru
+            const randomX = Math.random() * (maxX - minX) + minX;
+            const randomY = Math.random() * (maxY - minY) + minY;
+
+            // Terapkan posisi
             noBtn.style.position = 'fixed';
             noBtn.style.left = `${randomX}px`;
             noBtn.style.top = `${randomY}px`;
             
-            // Efek visual sedikit memutar agar terlihat panik
-            const randomRotate = Math.random() * 20 - 10;
+            // Rotasi acak agar terlihat lucu
+            const randomRotate = Math.random() * 40 - 20;
             noBtn.style.transform = `rotate(${randomRotate}deg)`;
         }
 
-        // Event Listener untuk Desktop (Mouse Hover)
+        // Event Listener Desktop (Mouse Hover)
         noBtn.addEventListener('mouseover', moveButton);
 
-        // Event Listener untuk Mobile (Touch Start - sebelum jari menyentuh layar penuh/klik)
+        // Event Listener Mobile (Touch)
         noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Mencegah klik terjadi
+            e.preventDefault();
             moveButton();
         });
 
-        // Fallback jika berhasil diklik (jarang terjadi)
+        // Event Listener Click (Jaga-jaga)
         noBtn.addEventListener('click', (e) => {
             e.preventDefault();
             moveButton();
@@ -763,7 +769,7 @@
 
             document.body.classList.remove('cinematic-mode');
 
-            // Reset Tombol No ke posisi semula
+            // Reset Tombol No ke posisi asli
             noBtn.style.position = 'relative';
             noBtn.style.left = 'auto';
             noBtn.style.top = 'auto';
