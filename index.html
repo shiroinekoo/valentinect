@@ -36,6 +36,7 @@
             overflow: hidden;
             position: relative;
             transition: background-color 1s ease;
+            user-select: none; /* Mencegah seleksi teks saat bermain dengan tombol */
         }
 
         /* Class ini akan aktif saat Cinematic Ending muncul */
@@ -170,7 +171,6 @@
         }
         .container.show { opacity: 1; transform: scale(1); }
 
-        /* Class ini akan menambahkan efek fade out sebelum di-hide */
         .container.fade-out {
             opacity: 0;
             transform: scale(0.8);
@@ -190,14 +190,39 @@
         }
         .container p { color: var(--white); font-size: 1.1rem; margin-bottom: 1.5rem; line-height: 1.6; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
-        .buttons { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 2rem; min-height: 60px; }
+        .buttons { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 20px; 
+            margin-top: 2rem; 
+            min-height: 60px; 
+            position: relative; /* Penting agar tombol No bisa absolute relatif terhadap container, lalu fixed saat kabur */
+            width: 100%;
+        }
         
         .btn { padding: 12px 25px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; font-family: 'Nunito', sans-serif; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .btn-yes { background-color: var(--secondary-color); color: white; box-shadow: 0 4px 15px rgba(45, 106, 79, 0.4); transform: scale(1); z-index: 2; }
+        
+        .btn-yes { 
+            background-color: var(--secondary-color); 
+            color: white; 
+            box-shadow: 0 4px 15px rgba(45, 106, 79, 0.4); 
+            transform: scale(1); 
+            z-index: 2; 
+            position: relative;
+        }
         .btn-yes:hover { background-color: var(--primary-color); transform: scale(1.1); }
         
-        .btn-no { background-color: rgba(255, 255, 255, 0.3); color: #e0e0e0; cursor: not-allowed !important; pointer-events: none; opacity: 0.5; position: relative; }
-        .btn-no::after { content: "❌"; position: absolute; font-size: 1.2rem; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        /* UPDATED STYLE NO BUTTON */
+        .btn-no { 
+            background-color: rgba(255, 255, 255, 0.3); 
+            color: #fff; 
+            position: relative; /* Mulai relative */
+            z-index: 2;
+            /* Transisi smooth agar terlihat seperti 'meluncur' bukan teleport */
+            transition: top 0.3s ease, left 0.3s ease, transform 0.2s; 
+        }
+        .btn-no:hover { background-color: rgba(255, 255, 255, 0.5); }
 
         /* --- MODAL UMUM --- */
         .modal {
@@ -305,7 +330,6 @@
             border: none; 
         }
 
-        /* Staggered animation delays */
         .bg-slide:nth-child(1) { animation-delay: 0s; }
         .bg-slide:nth-child(2) { animation-delay: 4s; }
         .bg-slide:nth-child(3) { animation-delay: 8s; }
@@ -369,18 +393,14 @@
             bottom: 50px;
             z-index: 50;
             padding: 15px 30px;
-            /* Background transparan */
             background: rgba(255, 255, 255, 0.2);
-            /* Efek blur */
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            /* Border tipis */
             border: 1px solid rgba(255, 255, 255, 0.5);
-            /* Font & Warna */
             font-family: 'Nunito', sans-serif;
             font-weight: bold;
             font-size: 1.2rem;
-            color: #fff; /* Teks Putih agar kontras */
+            color: #fff;
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -390,7 +410,6 @@
         }
         #restart-btn:hover {
             transform: scale(1.1);
-            /* Sedikit lebih terang saat di-hover */
             background: rgba(255, 255, 255, 0.4);
             box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         }
@@ -412,9 +431,7 @@
 
         /* Media Query HP */
         @media (max-width: 768px) {
-            #typing-text { 
-                font-size: 2.2rem; 
-            }
+            #typing-text { font-size: 2.2rem; }
         }
 
         @media (max-width: 600px) {
@@ -473,14 +490,14 @@
              alt="3D Couple Icon" 
              class="couple-icon">
 
-        <h1>Dear Tia 💖</h1>
+        <h1>Dear Tia</h1>
         <p>
             In this beautiful place, I have one important question for you...<br>
             <strong>Will you be my Valentine forever?</strong>
         </p>
 
         <div class="buttons">
-            <button class="btn btn-no">No</button>
+            <button class="btn btn-no" id="noBtn">No</button>
             <button class="btn btn-yes" id="yesBtn">Yes</button>
         </div>
     </div>
@@ -541,27 +558,19 @@
 
         // --- AUTO START LOGIC ---
         window.addEventListener('DOMContentLoaded', () => {
-            // 1. Tampilkan langsung konten utama
             document.getElementById('mainContent').classList.add('show');
-            
-            // 2. Tampilkan emblem musik
             document.getElementById('music-emblem').style.display = 'flex';
 
-            // 3. TAMBAH: Listener agar musik otomatis nyala saat klik pertama manapun
-            // Ini mematuhi kebijakan browser agar tidak perlu klik tombol musik 2x
             document.body.addEventListener('click', function startMusicOnFirstInteraction() {
                 if (!isMusicPlaying) {
                     playMusic();
                 }
-                // Hapus listener setelah jalan sekali
                 document.body.removeEventListener('click', startMusicOnFirstInteraction);
             }, { once: true });
         });
 
         function playMusic() {
-            // Cek agar tidak reload iframe jika sedang main
             if (isMusicPlaying) return;
-
             const iframeHTML = `
                 <iframe 
                     width="100%" 
@@ -587,21 +596,61 @@
         }
 
         function toggleMusic() {
-            if (isMusicPlaying) { 
-                pauseMusic(); 
-            } else { 
-                playMusic(); 
-            }
+            if (isMusicPlaying) { pauseMusic(); } else { playMusic(); }
         }
 
-        // --- LOGIC YES/NO BUTTONS ---
-        const noBtn = document.querySelector('.btn-no');
+        // --- LOGIC BUTTONS (UPDATED) ---
+        const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
         const modal = document.getElementById('successModal');
         const mainContent = document.getElementById('mainContent');
 
-        noBtn.addEventListener('mouseover', () => { noBtn.style.transform = `translateX(${Math.random() * 10 - 5}px)`; });
+        // LOGIC TOMBOL NO (RUNAWAY BUTTON)
+        function moveButton() {
+            // 1. Hitung dimensi layar dan tombol
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
 
+            // 2. Tentukan batas agar tombol tidak keluar layar
+            // Kita beri padding sedikit agar tidak terpotong di tepi
+            const padding = 20;
+            const maxWidth = viewportWidth - btnWidth - padding;
+            const maxHeight = viewportHeight - btnHeight - padding;
+
+            // 3. Buat posisi acak
+            const randomX = Math.max(padding, Math.random() * maxWidth);
+            const randomY = Math.max(padding, Math.random() * maxHeight);
+
+            // 4. Ubah posisi tombol
+            // Kita ubah ke position: fixed agar bisa lepas dari container
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+            
+            // Efek visual sedikit memutar agar terlihat panik
+            const randomRotate = Math.random() * 20 - 10;
+            noBtn.style.transform = `rotate(${randomRotate}deg)`;
+        }
+
+        // Event Listener untuk Desktop (Mouse Hover)
+        noBtn.addEventListener('mouseover', moveButton);
+
+        // Event Listener untuk Mobile (Touch Start - sebelum jari menyentuh layar penuh/klik)
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Mencegah klik terjadi
+            moveButton();
+        });
+
+        // Fallback jika berhasil diklik (jarang terjadi)
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+
+        // LOGIC TOMBOL YES (TEKS BERUBAH & MEMBESAR)
         yesBtn.addEventListener('click', () => {
             clickCount++;
             currentScale += 0.3;
@@ -703,7 +752,7 @@
             }
         }
 
-        // --- RESET / BACK FUNCTION (MUSIC CONTINUES) ---
+        // --- RESET / BACK FUNCTION ---
         function resetPage() {
             const endScreen = document.getElementById('cinematic-end');
             endScreen.classList.remove('active');
@@ -713,6 +762,12 @@
             }, 1500);
 
             document.body.classList.remove('cinematic-mode');
+
+            // Reset Tombol No ke posisi semula
+            noBtn.style.position = 'relative';
+            noBtn.style.left = 'auto';
+            noBtn.style.top = 'auto';
+            noBtn.style.transform = 'none';
 
             mainContent.classList.remove('fade-out');
             mainContent.style.display = 'flex';
@@ -788,7 +843,7 @@
                 confetto.position.y += confetto.velocity.y;
                 if (confetto.position.y >= canvas.height) confetti.splice(index, 1);
                 if (confetto.position.x > canvas.width) confetto.position.x = 0;
-                if (confetto.position.x < 0) confetti.position.x = canvas.width;
+                if (confetto.position.x < 0) confetto.position.x = canvas.width;
                 confetto.scale.y = Math.cos(confetto.position.y * 0.1);
                 ctx.fillStyle = confetto.scale.y > 0 ? confetto.color.front : confetto.color.back;
                 ctx.fillRect(-width / 2, -height / 2, width, height);
@@ -801,4 +856,3 @@
     </script>
 </body>
 </html>
-
