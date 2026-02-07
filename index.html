@@ -39,7 +39,6 @@
             user-select: none;
         }
 
-        /* Class ini akan aktif saat Cinematic Ending muncul */
         body.cinematic-mode {
             background-image: none !important;
             background-color: #000; 
@@ -170,7 +169,6 @@
             display: flex; flex-direction: column; align-items: center;
         }
         .container.show { opacity: 1; transform: scale(1); }
-
         .container.fade-out {
             opacity: 0;
             transform: scale(0.8);
@@ -213,7 +211,6 @@
         }
         .btn-yes:hover { background-color: var(--primary-color); transform: scale(1.1); }
         
-        /* STYLE NO BUTTON */
         .btn-no { 
             background-color: rgba(255, 255, 255, 0.3); 
             color: #fff; 
@@ -310,56 +307,49 @@
             pointer-events: all;
         }
 
-        /* --- SLIDESHOW BACKGROUND --- */
+        /* --- SLIDESHOW BACKGROUND (LAYER 1) --- */
         #bg-slideshow {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: 1;
-            transition: filter 1s ease;
+            overflow: hidden;
         }
 
-        .bg-slide {
+        .slide-img {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             object-fit: cover;
             opacity: 0;
-            animation: zoomEffect 16s infinite; /* 16s cycle */
-            border: none; 
+            transition: opacity 2s ease-in-out;
+            z-index: 1;
         }
 
-        .bg-slide:nth-child(1) { animation-delay: 0s; }
-        .bg-slide:nth-child(2) { animation-delay: 4s; }
-        .bg-slide:nth-child(3) { animation-delay: 8s; }
-        .bg-slide:nth-child(4) { animation-delay: 12s; }
-
-        @keyframes zoomEffect {
-            0% { opacity: 0; transform: scale(1); filter: blur(5px); }
-            5% { opacity: 1; transform: scale(1); filter: blur(0px); } 
-            20% { transform: scale(1.1); filter: blur(0px); } 
-            25% { opacity: 1; transform: scale(1.1); filter: blur(0px); } 
-            30% { opacity: 0; transform: scale(1.1); filter: blur(5px); } 
-            100% { opacity: 0; }
+        .slide-img.active {
+            opacity: 1;
+            z-index: 2;
         }
 
-        /* Dark overlay for text readability */
+        /* --- HEART CANVAS (LAYER 2) --- */
+        #heart-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 5; /* Di atas Slideshow, Di bawah Text */
+            pointer-events: none;
+        }
+
+        /* Dark overlay for text readability (LAYER 3) */
         #cinematic-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.2); 
-            z-index: 2;
+            background: rgba(0, 0, 0, 0.3); /* Overlay agak gelap agar teks & hati jelas */
+            z-index: 6;
             transition: background 1.5s ease;
         }
         
-        #cinematic-end.active #cinematic-overlay {
-            background: rgba(0, 0, 0, 0.3); 
-        }
-
-        #end-couple-photo {
-            display: none !important; 
-        }
-
+        /* Text (LAYER 4) */
         #typing-text {
             position: relative;
             z-index: 10;
@@ -469,9 +459,7 @@
     </div>
 
     <!-- 1. Start Screen (HIDDEN) -->
-    <div id="start-screen">
-        <!-- Isi disembunyikan via CSS -->
-    </div>
+    <div id="start-screen"></div>
 
     <!-- 2. Music Emblem -->
     <div id="music-emblem" onclick="toggleMusic()">
@@ -532,15 +520,26 @@
         
         <!-- Background Slideshow Container -->
         <div id="bg-slideshow">
-            <img class="bg-slide" src="https://z-cdn-media.chatglm.cn/files/8403b148-8002-47ca-8c98-95a5ed5c88b9.png?auth_key=1870300914-0e59d4c9495b40478825e863138a518f-0-5f698babc341fb5407fcf1d3999bf58f" alt="Slide 1">
-            <img class="bg-slide" src="https://z-cdn-media.chatglm.cn/files/b76d4704-d330-4abd-8fcb-8a44b5b79409.png?auth_key=1870300914-29a7e8d418854bf8bbdbe0622b945cd6-0-47b4314811fd445244db1d130ceff2cb" alt="Slide 2">
-            <img class="bg-slide" src="https://z-cdn-media.chatglm.cn/files/ea53c959-5614-4624-bee4-6432d1732006.png?auth_key=1870300914-da9e139487924d009422f7e62e8901fe-0-0a41eb9ab52ec8a1a92f28dc841c6276" alt="Slide 3">
-            <img class="bg-slide" src="https://z-cdn-media.chatglm.cn/files/07298f2f-2166-44f1-8eb3-6081802e1f74.png?auth_key=1870300914-9c4986d448b04d6ea193582018b12842-0-51601c72bccaca72714becea2dee9305" alt="Slide 4">
+            <!-- Foto 1: Indoor Graffiti Scene -->
+            <img src="https://z-cdn-media.chatglm.cn/files/6bc8caa3-cd3f-45db-879b-3e3d6d688f23.png?auth_key=1870486996-eb8cf84b716740b8a268c0eccdaad298-0-635cd8b6b56d0b3f7ca898b20a5d91a2" class="slide-img active" alt="Memory 1">
+            
+            <!-- Foto 2: Outdoor Wooden Platform -->
+            <img src="https://z-cdn-media.chatglm.cn/files/129e36c6-1d6d-4dec-8401-665d5bffcb61.png?auth_key=1870486996-1255990fd0a341cf9eed4e91d7b6ab84-0-ad08012222120ba04f580f7dd57d4750" class="slide-img" alt="Memory 2">
+            
+            <!-- Foto 3: Waterfall Scene -->
+            <img src="https://z-cdn-media.chatglm.cn/files/2e0ea033-5bef-4fe7-b003-9895b617ebf0.png?auth_key=1870486996-e0c293f96ed54def84eb673731cf3e7e-0-5269e52cd72cdf4d711743fb9bd7efb6" class="slide-img" alt="Memory 3">
+            
+            <!-- Foto 4: Close Up Anime Style -->
+            <img src="https://z-cdn-media.chatglm.cn/files/0895c784-1889-4599-82cc-581e80c67f41.png?auth_key=1870486996-fb9cded388704c1196fe3a5f29f6d7b3-0-44a65fbd9195bac4172b53bc7fb2a24d" class="slide-img" alt="Memory 4">
+
+            <!-- Foto 5: The Hug Scene (DITAMBAHKAN) -->
+            <img src="https://z-cdn-media.chatglm.cn/files/dbf6c948-97cb-4ea6-8357-19e49a82fd8c.png?auth_key=1870487831-f84deb50d7c14b27b61652ad504d8498-0-73803f8ee2b451b3d572c5195210b6f5" class="slide-img" alt="Memory 5">
         </div>
 
-        <div id="cinematic-overlay"></div>
+        <!-- Floating Hearts Canvas (Efek di atas Foto) -->
+        <canvas id="heart-canvas"></canvas>
 
-        <img id="end-couple-photo" src="https://z-cdn-media.chatglm.cn/files/02b72866-f915-4397-81fd-18f2fbf66708.png?auth_key=1870285837-8b62c65cd5214f04b5464f274a32791a-0-47ca9399fe118da4b400a7869c854afb" alt="Couple">
+        <div id="cinematic-overlay"></div>
         
         <div id="typing-text"></div>
 
@@ -554,6 +553,9 @@
         let isMusicPlaying = false;
         let clickCount = 0;
         let currentScale = 1;
+        let heartAnimationId = null;
+        let slideInterval = null;
+        let slideIndex = 0;
 
         // --- AUTO START LOGIC ---
         window.addEventListener('DOMContentLoaded', () => {
@@ -606,54 +608,31 @@
 
         // LOGIC TOMBOL NO (RUNAWAY BUTTON - DI DALAM KARTU)
         function moveButton() {
-            // 1. Ambil batas area kartu putih (container)
             const containerRect = mainContent.getBoundingClientRect();
-            
-            // Ukuran tombol
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
-
-            // Padding agar tombol tidak nempel tepi
             const padding = 15;
 
-            // Batas koordinat X (horizontal) di dalam kartu
             const minX = containerRect.left + padding;
             const maxX = containerRect.right - btnWidth - padding;
 
-            // Batas koordinat Y (vertikal) di dalam kartu
-            // Kita tambahkan +200px agar tidak naik ke atas foto/judul
-            // Hanya bergerak di area bawah (teks & tombol)
             const minY = containerRect.top + 200; 
             const maxY = containerRect.bottom - btnHeight - padding;
 
-            // Hitung posisi acak baru
             const randomX = Math.random() * (maxX - minX) + minX;
             const randomY = Math.random() * (maxY - minY) + minY;
 
-            // Terapkan posisi
             noBtn.style.position = 'fixed';
             noBtn.style.left = `${randomX}px`;
             noBtn.style.top = `${randomY}px`;
             
-            // Rotasi acak agar terlihat lucu
             const randomRotate = Math.random() * 40 - 20;
             noBtn.style.transform = `rotate(${randomRotate}deg)`;
         }
 
-        // Event Listener Desktop (Mouse Hover)
         noBtn.addEventListener('mouseover', moveButton);
-
-        // Event Listener Mobile (Touch)
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            moveButton();
-        });
-
-        // Event Listener Click (Jaga-jaga)
-        noBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            moveButton();
-        });
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
+        noBtn.addEventListener('click', (e) => { e.preventDefault(); moveButton(); });
 
 
         // LOGIC TOMBOL YES (TEKS BERUBAH & MEMBESAR)
@@ -691,6 +670,103 @@
             document.getElementById('orbitSystem').classList.add('behind-modal');
         }
 
+        // --- LOGIC SLIDESHOW ---
+        function startSlideshow() {
+            const slides = document.querySelectorAll('.slide-img');
+            // Reset index
+            slideIndex = 0;
+            
+            // Clear any existing interval
+            if (slideInterval) clearInterval(slideInterval);
+
+            slideInterval = setInterval(() => {
+                slides[slideIndex].classList.remove('active');
+                slideIndex = (slideIndex + 1) % slides.length;
+                slides[slideIndex].classList.add('active');
+            }, 4000); // Ganti foto setiap 4 detik
+        }
+
+        // --- LOGIC FLOATING HEARTS (UPDATED) ---
+        const heartCanvas = document.getElementById('heart-canvas');
+        const hCtx = heartCanvas.getContext('2d');
+        let hearts = [];
+
+        function resizeHeartCanvas() {
+            heartCanvas.width = window.innerWidth;
+            heartCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeHeartCanvas);
+        resizeHeartCanvas();
+
+        class HeartParticle {
+            constructor() {
+                this.x = Math.random() * heartCanvas.width;
+                this.y = heartCanvas.height + Math.random() * 100;
+                this.size = Math.random() * 30 + 10; 
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 0.5 - 0.25; 
+                this.opacity = Math.random() * 0.6 + 0.2;
+                this.wobble = Math.random() * Math.PI * 2;
+                this.wobbleSpeed = Math.random() * 0.03 + 0.01;
+                const colors = [
+                    'rgba(255, 105, 180,', 
+                    'rgba(255, 20, 147,', 
+                    'rgba(255, 182, 193,', 
+                    'rgba(220, 20, 60,'    
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.wobble += this.wobbleSpeed;
+                this.x += Math.sin(this.wobble) * 0.5; 
+                if (this.y < -50) {
+                    this.y = heartCanvas.height + 50;
+                    this.x = Math.random() * heartCanvas.width;
+                }
+            }
+
+            draw() {
+                hCtx.save();
+                hCtx.globalAlpha = this.opacity;
+                hCtx.fillStyle = this.color + '1)';
+                
+                hCtx.translate(this.x, this.y);
+                
+                hCtx.beginPath();
+                const s = this.size; 
+                hCtx.moveTo(0, 0);
+                hCtx.bezierCurveTo(-s / 2, -s / 2, -s, s / 3, 0, s);
+                hCtx.bezierCurveTo(s, s / 3, s / 2, -s / 2, 0, 0);
+                hCtx.fill();
+                
+                hCtx.shadowColor = this.color + '0.5)';
+                hCtx.shadowBlur = 10;
+                hCtx.fill();
+                
+                hCtx.restore();
+            }
+        }
+
+        function initFloatingHearts() {
+            hearts = [];
+            const heartCount = window.innerWidth < 768 ? 40 : 80; 
+            for (let i = 0; i < heartCount; i++) {
+                hearts.push(new HeartParticle());
+            }
+        }
+
+        function animateHearts() {
+            hCtx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            heartAnimationId = requestAnimationFrame(animateHearts);
+        }
+
         // --- LOGIC CINEMATIC ENDING ---
         function showCinematicEnd() {
             const letterModal = document.getElementById('letterModal');
@@ -710,14 +786,21 @@
 
             setTimeout(() => {
                 endScreen.classList.add('active');
+                
+                // START SLIDESHOW
+                startSlideshow();
+                
+                // START HEARTS
+                resizeHeartCanvas();
+                initFloatingHearts();
+                animateHearts();
             }, 500);
 
             setTimeout(() => {
                 playStorySequence();
             }, 1500);
 
-            const totalCycleTime = 16000; 
-
+            // Tampilkan tombol back setelah 3 detik
             const restartBtn = document.getElementById('restart-btn');
             restartBtn.classList.remove('visible');
             restartBtn.style.display = 'none';
@@ -727,7 +810,7 @@
                 setTimeout(() => {
                     restartBtn.classList.add('visible');
                 }, 100);
-            }, totalCycleTime);
+            }, 3000);
         }
 
         function playStorySequence() {
@@ -763,13 +846,33 @@
             const endScreen = document.getElementById('cinematic-end');
             endScreen.classList.remove('active');
             
+            // Stop Slideshow
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+            }
+            // Reset slides to first image
+            const slides = document.querySelectorAll('.slide-img');
+            slides.forEach((s, i) => {
+                if(i === 0) s.classList.add('active');
+                else s.classList.remove('active');
+            });
+            slideIndex = 0;
+
+            // Stop Heart Animation
+            if (heartAnimationId) {
+                cancelAnimationFrame(heartAnimationId);
+                heartAnimationId = null;
+            }
+            hCtx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
+            
             setTimeout(() => {
                 endScreen.style.display = 'none';
             }, 1500);
 
             document.body.classList.remove('cinematic-mode');
 
-            // Reset Tombol No ke posisi asli
+            // Reset Tombol No
             noBtn.style.position = 'relative';
             noBtn.style.left = 'auto';
             noBtn.style.top = 'auto';
