@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For My Special Valentine ❤️</title>
     
     <!-- Favicon -->
@@ -37,6 +37,7 @@
             position: relative;
             transition: background-color 1s ease;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body.cinematic-mode {
@@ -115,11 +116,6 @@
             100% { transform: translateY(-10px) scale(1.05) rotate(3deg); }
         }
 
-        /* --- START SCREEN --- */
-        #start-screen {
-            display: none !important;
-        }
-
         /* --- MUSIC EMBLEM --- */
         #music-emblem {
             position: fixed;
@@ -132,7 +128,7 @@
             -webkit-backdrop-filter: blur(8px);
             border: 2px solid rgba(255, 255, 255, 0.6);
             border-radius: 50%;
-            display: none;
+            display: none; /* Hidden initially until interaction */
             justify-content: center;
             align-items: center;
             cursor: pointer;
@@ -143,18 +139,9 @@
         #music-emblem:hover { transform: scale(1.1); background: rgba(255, 255, 255, 0.3); }
         #music-emblem span { font-size: 28px; display: block; }
         #music-emblem.playing span { animation: spin 4s linear infinite; }
-        #music-emblem.paused::after {
-            content: '';
-            position: absolute;
-            width: 24px; height: 24px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19h4V5H6v14zm8-14v14h4V5h-4z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: center;
-        }
+        #music-emblem.paused span { animation: none; opacity: 0.7; }
+        
         @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        #music-container {
-            position: fixed; top: -9999px; left: -9999px; width: 300px; height: 200px; opacity: 1; pointer-events: none; z-index: -1;
-        }
 
         /* --- MAIN CARD --- */
         .container {
@@ -199,7 +186,7 @@
             width: 100%;
         }
         
-        .btn { padding: 12px 25px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; font-family: 'Nunito', sans-serif; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .btn { padding: 12px 25px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; font-family: 'Nunito', sans-serif; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); -webkit-tap-highlight-color: transparent;}
         
         .btn-yes { 
             background-color: var(--secondary-color); 
@@ -209,6 +196,7 @@
             z-index: 2; 
             position: relative;
         }
+        .btn-yes:active { transform: scale(0.95); }
         .btn-yes:hover { background-color: var(--primary-color); transform: scale(1.1); }
         
         .btn-no { 
@@ -218,6 +206,7 @@
             z-index: 2;
             transition: top 0.2s ease, left 0.2s ease, transform 0.2s; 
         }
+        .btn-no:active { transform: scale(0.9); }
         .btn-no:hover { background-color: rgba(255, 255, 255, 0.5); }
 
         /* --- MODAL UMUM --- */
@@ -269,6 +258,7 @@
             margin-top: 1rem;
             box-shadow: 0 4px 15px rgba(45, 106, 79, 0.4); 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            -webkit-tap-highlight-color: transparent;
         }
         .close-btn:hover {
             background-color: var(--primary-color);
@@ -336,7 +326,7 @@
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            z-index: 5; /* Di atas Slideshow, Di bawah Text */
+            z-index: 5;
             pointer-events: none;
         }
 
@@ -344,7 +334,7 @@
         #cinematic-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.3); /* Overlay agak gelap agar teks & hati jelas */
+            background: rgba(0, 0, 0, 0.3);
             z-index: 6;
             transition: background 1.5s ease;
         }
@@ -376,7 +366,7 @@
             transform: translateY(0);
         }
 
-        /* --- RESTART BUTTON (TRANSPARENT STYLE) --- */
+        /* --- RESTART BUTTON --- */
         #restart-btn {
             position: absolute;
             bottom: 50px;
@@ -396,6 +386,7 @@
             display: none;
             opacity: 0;
             transition: opacity 1s ease, transform 0.3s ease, background 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
         #restart-btn:hover {
             transform: scale(1.1);
@@ -458,20 +449,22 @@
         </div>
     </div>
 
-    <!-- 1. Start Screen (HIDDEN) -->
-    <div id="start-screen"></div>
+    <!-- AUDIO PLAYER (PENGGANTI YOUTUBE) -->
+    <!-- Menggunakan link MP3 langsung yang lebih stabil untuk Mobile -->
+    <!-- Ganti src dengan link MP3 lagu favorit kalian jika ingin mengganti -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-    <!-- 2. Music Emblem -->
+    <!-- Music Emblem -->
     <div id="music-emblem" onclick="toggleMusic()">
         <span>🎵</span>
     </div>
 
-    <!-- 3. Music Container -->
-    <div id="music-container"></div>
-
     <canvas id="confetti-canvas"></canvas>
 
-    <!-- 4. Main Content -->
+    <!-- Main Content -->
     <div class="container" id="mainContent">
         <img src="https://z-cdn-media.chatglm.cn/files/02b72866-f915-4397-81fd-18f2fbf66708.png?auth_key=1870285837-8b62c65cd5214f04b5464f274a32791a-0-47ca9399fe118da4b400a7869c854afb" 
              alt="3D Couple Icon" 
@@ -489,7 +482,7 @@
         </div>
     </div>
 
-    <!-- 5. Success Modal -->
+    <!-- Success Modal -->
     <div class="modal" id="successModal">
         <div class="modal-content centered">
             <h2>Cihuyy!! 😘</h2>
@@ -498,7 +491,7 @@
         </div>
     </div>
 
-    <!-- 6. Letter Modal -->
+    <!-- Letter Modal -->
     <div class="modal" id="letterModal">
         <div class="modal-content">
             <h2>💌</h2>
@@ -515,41 +508,27 @@
         </div>
     </div>
 
-    <!-- 7. Cinematic Ending Screen -->
+    <!-- Cinematic Ending Screen -->
     <div id="cinematic-end">
-        
-        <!-- Background Slideshow Container -->
         <div id="bg-slideshow">
-            <!-- Foto 1: Indoor Graffiti Scene -->
             <img src="https://z-cdn-media.chatglm.cn/files/6bc8caa3-cd3f-45db-879b-3e3d6d688f23.png?auth_key=1870486996-eb8cf84b716740b8a268c0eccdaad298-0-635cd8b6b56d0b3f7ca898b20a5d91a2" class="slide-img active" alt="Memory 1">
-            
-            <!-- Foto 2: Outdoor Wooden Platform -->
             <img src="https://z-cdn-media.chatglm.cn/files/129e36c6-1d6d-4dec-8401-665d5bffcb61.png?auth_key=1870486996-1255990fd0a341cf9eed4e91d7b6ab84-0-ad08012222120ba04f580f7dd57d4750" class="slide-img" alt="Memory 2">
-            
-            <!-- Foto 3: Waterfall Scene -->
             <img src="https://z-cdn-media.chatglm.cn/files/2e0ea033-5bef-4fe7-b003-9895b617ebf0.png?auth_key=1870486996-e0c293f96ed54def84eb673731cf3e7e-0-5269e52cd72cdf4d711743fb9bd7efb6" class="slide-img" alt="Memory 3">
-            
-            <!-- Foto 4: Close Up Anime Style -->
             <img src="https://z-cdn-media.chatglm.cn/files/0895c784-1889-4599-82cc-581e80c67f41.png?auth_key=1870486996-fb9cded388704c1196fe3a5f29f6d7b3-0-44a65fbd9195bac4172b53bc7fb2a24d" class="slide-img" alt="Memory 4">
-
-            <!-- Foto 5: The Hug Scene (DITAMBAHKAN) -->
             <img src="https://z-cdn-media.chatglm.cn/files/dbf6c948-97cb-4ea6-8357-19e49a82fd8c.png?auth_key=1870487831-f84deb50d7c14b27b61652ad504d8498-0-73803f8ee2b451b3d572c5195210b6f5" class="slide-img" alt="Memory 5">
         </div>
 
-        <!-- Floating Hearts Canvas (Efek di atas Foto) -->
         <canvas id="heart-canvas"></canvas>
 
         <div id="cinematic-overlay"></div>
         
         <div id="typing-text"></div>
 
-        <!-- Transparent Back Button -->
         <button id="restart-btn" onclick="resetPage()">Back</button>
     </div>
 
     <script>
         // --- GLOBAL VARIABLES ---
-        const videoId = 'CgjknaWVChY'; 
         let isMusicPlaying = false;
         let clickCount = 0;
         let currentScale = 1;
@@ -557,47 +536,54 @@
         let slideInterval = null;
         let slideIndex = 0;
 
+        // Audio Element
+        const audioPlayer = document.getElementById('bg-music');
+        // Set volume awal (0.5 = 50%)
+        audioPlayer.volume = 0.5;
+
         // --- AUTO START LOGIC ---
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('mainContent').classList.add('show');
+            
+            // Ikon musik muncul, tapi musik belum jalan
             document.getElementById('music-emblem').style.display = 'flex';
-
-            document.body.addEventListener('click', function startMusicOnFirstInteraction() {
-                if (!isMusicPlaying) {
-                    playMusic();
-                }
-                document.body.removeEventListener('click', startMusicOnFirstInteraction);
-            }, { once: true });
+            document.getElementById('music-emblem').classList.add('paused');
         });
 
+        // Fungsi Play Musik (Diperbaiki untuk iOS)
         function playMusic() {
-            if (isMusicPlaying) return;
-            const iframeHTML = `
-                <iframe 
-                    width="100%" 
-                    height="100%" 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=0&playsinline=1" 
-                    title="YouTube video player" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-            `;
-            document.getElementById('music-container').innerHTML = iframeHTML;
-            isMusicPlaying = true;
-            document.getElementById('music-emblem').classList.add('playing');
-            document.getElementById('music-emblem').classList.remove('paused');
+            // iOS membutuhkan interaksi user untuk menjalankan audio.play()
+            const playPromise = audioPlayer.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Playback berhasil dimulai
+                    isMusicPlaying = true;
+                    document.getElementById('music-emblem').classList.add('playing');
+                    document.getElementById('music-emblem').classList.remove('paused');
+                })
+                .catch(error => {
+                    console.log("Autoplay dicegah browser, menunggu klik user:", error);
+                    isMusicPlaying = false;
+                    document.getElementById('music-emblem').classList.remove('playing');
+                    document.getElementById('music-emblem').classList.add('paused');
+                });
+            }
         }
 
         function pauseMusic() {
-            document.getElementById('music-container').innerHTML = '';
+            audioPlayer.pause();
             isMusicPlaying = false;
             document.getElementById('music-emblem').classList.remove('playing');
             document.getElementById('music-emblem').classList.add('paused');
         }
 
         function toggleMusic() {
-            if (isMusicPlaying) { pauseMusic(); } else { playMusic(); }
+            if (isMusicPlaying) { 
+                pauseMusic(); 
+            } else { 
+                playMusic(); 
+            }
         }
 
         // --- LOGIC BUTTONS ---
@@ -606,7 +592,7 @@
         const modal = document.getElementById('successModal');
         const mainContent = document.getElementById('mainContent');
 
-        // LOGIC TOMBOL NO (RUNAWAY BUTTON - DI DALAM KARTU)
+        // LOGIC TOMBOL NO (RUNAWAY BUTTON)
         function moveButton() {
             const containerRect = mainContent.getBoundingClientRect();
             const btnWidth = noBtn.offsetWidth;
@@ -635,8 +621,13 @@
         noBtn.addEventListener('click', (e) => { e.preventDefault(); moveButton(); });
 
 
-        // LOGIC TOMBOL YES (TEKS BERUBAH & MEMBESAR)
+        // LOGIC TOMBOL YES
         yesBtn.addEventListener('click', () => {
+            // COBA MAINKAN MUSIK SAAT TOMBOL YES DI KLIK (Solusi iOS)
+            if (!isMusicPlaying) {
+                playMusic();
+            }
+
             clickCount++;
             currentScale += 0.3;
             yesBtn.style.transform = `scale(${currentScale})`;
@@ -673,20 +664,17 @@
         // --- LOGIC SLIDESHOW ---
         function startSlideshow() {
             const slides = document.querySelectorAll('.slide-img');
-            // Reset index
             slideIndex = 0;
-            
-            // Clear any existing interval
             if (slideInterval) clearInterval(slideInterval);
 
             slideInterval = setInterval(() => {
                 slides[slideIndex].classList.remove('active');
                 slideIndex = (slideIndex + 1) % slides.length;
                 slides[slideIndex].classList.add('active');
-            }, 4000); // Ganti foto setiap 4 detik
+            }, 4000);
         }
 
-        // --- LOGIC FLOATING HEARTS (UPDATED) ---
+        // --- LOGIC FLOATING HEARTS ---
         const heartCanvas = document.getElementById('heart-canvas');
         const hCtx = heartCanvas.getContext('2d');
         let hearts = [];
@@ -732,20 +720,16 @@
                 hCtx.save();
                 hCtx.globalAlpha = this.opacity;
                 hCtx.fillStyle = this.color + '1)';
-                
                 hCtx.translate(this.x, this.y);
-                
                 hCtx.beginPath();
                 const s = this.size; 
                 hCtx.moveTo(0, 0);
                 hCtx.bezierCurveTo(-s / 2, -s / 2, -s, s / 3, 0, s);
                 hCtx.bezierCurveTo(s, s / 3, s / 2, -s / 2, 0, 0);
                 hCtx.fill();
-                
                 hCtx.shadowColor = this.color + '0.5)';
                 hCtx.shadowBlur = 10;
                 hCtx.fill();
-                
                 hCtx.restore();
             }
         }
@@ -786,11 +770,7 @@
 
             setTimeout(() => {
                 endScreen.classList.add('active');
-                
-                // START SLIDESHOW
                 startSlideshow();
-                
-                // START HEARTS
                 resizeHeartCanvas();
                 initFloatingHearts();
                 animateHearts();
@@ -800,7 +780,6 @@
                 playStorySequence();
             }, 1500);
 
-            // Tampilkan tombol back setelah 3 detik
             const restartBtn = document.getElementById('restart-btn');
             restartBtn.classList.remove('visible');
             restartBtn.style.display = 'none';
@@ -830,9 +809,7 @@
             if (i < text.length) {
                 let char = text.charAt(i);
                 let htmlContent = text.substring(0, i+1).replace(/\n/g, '<br>');
-                
                 element.innerHTML = htmlContent + '<span class="cursor"></span>';
-                
                 i++;
                 setTimeout(() => typeWriter(text, element, i, callback), 100);
             } else {
@@ -846,12 +823,10 @@
             const endScreen = document.getElementById('cinematic-end');
             endScreen.classList.remove('active');
             
-            // Stop Slideshow
             if (slideInterval) {
                 clearInterval(slideInterval);
                 slideInterval = null;
             }
-            // Reset slides to first image
             const slides = document.querySelectorAll('.slide-img');
             slides.forEach((s, i) => {
                 if(i === 0) s.classList.add('active');
@@ -859,7 +834,6 @@
             });
             slideIndex = 0;
 
-            // Stop Heart Animation
             if (heartAnimationId) {
                 cancelAnimationFrame(heartAnimationId);
                 heartAnimationId = null;
@@ -902,6 +876,9 @@
             const typingText = document.getElementById('typing-text');
             typingText.classList.remove('visible');
             typingText.innerHTML = '';
+            
+            // Opsional: Matikan musik saat reset, atau biarkan jalan
+            // pauseMusic(); 
         }
 
         // --- LOGIC CONFETTI ---
@@ -965,4 +942,3 @@
     </script>
 </body>
 </html>
-
