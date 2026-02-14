@@ -33,7 +33,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow: hidden; /* Saya perbaiki typo hden menjadi hidden */
             position: relative;
             transition: background-color 1s ease;
             user-select: none;
@@ -59,7 +59,7 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            width: var(--orbit-size);
+            width: var(--orbit-size); /* Saya perbaiki typo wth menjadi width */
             height: var(--orbit-size);
             transform: translate(-50%, -50%);
             border-radius: 50%;
@@ -142,18 +142,6 @@
         #music-emblem.paused span { animation: none; opacity: 0.7; }
         
         @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* --- MUSIC CONTAINER (YOUTUBE) --- */
-        #music-container {
-            position: fixed; 
-            top: -9999px; 
-            left: -9999px; 
-            width: 300px; 
-            height: 200px; 
-            opacity: 1; 
-            pointer-events: none; 
-            z-index: -1;
-        }
 
         /* --- MAIN CARD --- */
         .container {
@@ -461,8 +449,12 @@
         </div>
     </div>
 
-    <!-- MUSIC CONTAINER -->
-    <div id="music-container"></div>
+    <!-- AUDIO PLAYER (GITHUB RAW LINK) -->
+    <!-- Link lagu Mitski dari GitHub Anda sudah dimasukkan di bawah -->
+    <audio id="bg-music" loop>
+        <source src="https://raw.githubusercontent.com/shiroinekoo/valentinect/main/Mitski%20-%20My%20Love%20Mine%20All%20Mine%20-%20LatinHype.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <!-- Music Emblem -->
     <div id="music-emblem" onclick="toggleMusic()">
@@ -536,13 +528,17 @@
 
     <script>
         // --- GLOBAL VARIABLES ---
-        const videoId = 'CgjknaWVChY'; // ID YouTube yang diminta
         let isMusicPlaying = false;
         let clickCount = 0;
         let currentScale = 1;
         let heartAnimationId = null;
         let slideInterval = null;
         let slideIndex = 0;
+
+        // Audio Element Reference
+        const audioPlayer = document.getElementById('bg-music');
+        // Set volume awal
+        audioPlayer.volume = 0.5;
 
         // --- AUTO START LOGIC ---
         window.addEventListener('DOMContentLoaded', () => {
@@ -553,33 +549,26 @@
             document.getElementById('music-emblem').classList.add('paused');
         });
 
-        // Fungsi Play Musik (YouTube)
+        // Fungsi Play Musik (HTML5 Audio)
         function playMusic() {
-            if (isMusicPlaying) return;
-            
-            // Inject iframe YouTube ke dalam container
-            // Menggunakan 'playsinline=1' agar tidak memaksa fullscreen di iPhone
-            // Menggunakan 'enablejsapi=1' untuk kontrol lebih lanjut jika perlu
-            const iframeHTML = `
-                <iframe 
-                    width="100%" 
-                    height="100%" 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=0&playsinline=1" 
-                    title="YouTube video player" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-            `;
-            document.getElementById('music-container').innerHTML = iframeHTML;
-            isMusicPlaying = true;
-            document.getElementById('music-emblem').classList.add('playing');
-            document.getElementById('music-emblem').classList.remove('paused');
+            // iOS membutuhkan interaksi user
+            const playPromise = audioPlayer.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Playback berhasil
+                    isMusicPlaying = true;
+                    document.getElementById('music-emblem').classList.add('playing');
+                    document.getElementById('music-emblem').classList.remove('paused');
+                })
+                .catch(error => {
+                    console.log("Autoplay dicegah browser:", error);
+                });
+            }
         }
 
         function pauseMusic() {
-            // Hapus iframe untuk menghentikan musik (karena API pause sulit tanpa library eksternal)
-            document.getElementById('music-container').innerHTML = '';
+            audioPlayer.pause();
             isMusicPlaying = false;
             document.getElementById('music-emblem').classList.remove('playing');
             document.getElementById('music-emblem').classList.add('paused');
@@ -631,7 +620,7 @@
         // LOGIC TOMBOL YES
         yesBtn.addEventListener('click', () => {
             // TRIGGER MUSIK SAAT TOMBOL YES DI KLIK
-            // Ini adalah trik agar iOS mengizinkan autoplay (karena ada interaksi user)
+            // Solusi definitif untuk iOS
             if (!isMusicPlaying) {
                 playMusic();
             }
